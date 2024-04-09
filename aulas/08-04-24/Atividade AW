@@ -1,0 +1,52 @@
+#Grupo: Alisson Rayan Santos de Souza, Wesley Cristian Carvalho Dantas
+from abc import ABC, abstractmethod
+
+# Interface para o tipo de funcionário
+class TipoFuncionario(ABC):
+    @abstractmethod
+    def calcular_salario(self, horas_trabalhadas, taxa_horaria):
+        pass
+
+# Implementações específicas do tipo de funcionário
+class FuncionarioHora(TipoFuncionario):
+    def calcular_salario(self, horas_trabalhadas, taxa_horaria):
+        return horas_trabalhadas * taxa_horaria
+
+class Gerente(TipoFuncionario):
+    def calcular_salario(self, horas_trabalhadas, taxa_horaria):
+        return horas_trabalhadas * taxa_horaria * 1.5
+
+# Classe Employee que segue o Princípio da Responsabilidade Única
+class Funcionario:
+    def __init__(self, nome, tipo_funcionario: TipoFuncionario):
+        self.nome = nome
+        self.tipo_funcionario = tipo_funcionario
+
+    def calcular_salario(self, horas_trabalhadas, taxa_horaria):
+        return self.tipo_funcionario.calcular_salario(horas_trabalhadas, taxa_horaria)
+
+# Classe que gerencia os funcionários e segue o Princípio Aberto/Fechado
+class GerenciadorFuncionarios:
+    def __init__(self):
+        self.funcionarios = []
+
+    def adicionar_funcionario(self, funcionario):
+        self.funcionarios.append(funcionario)
+
+    def calcular_salarios(self, horas_trabalhadas, taxa_horaria):
+        for funcionario in self.funcionarios:
+            print(f"{funcionario.nome}: R${funcionario.calcular_salario(horas_trabalhadas, taxa_horaria)}")
+
+# Exemplo de uso
+funcionario_hora = FuncionarioHora()
+gerente = Gerente()
+
+funcionario1 = Funcionario("João da Silva", funcionario_hora)
+funcionario2 = Funcionario("Maria Oliveira", gerente)
+
+gerenciador_funcionarios = GerenciadorFuncionarios()
+gerenciador_funcionarios.adicionar_funcionario(funcionario1)
+gerenciador_funcionarios.adicionar_funcionario(funcionario2)
+
+# Calcular salários para todos os funcionários
+gerenciador_funcionarios.calcular_salarios(40, 15)
